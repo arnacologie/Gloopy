@@ -1,4 +1,4 @@
-package com.example.gloopy;
+package com.levitte.garnier.gloopy;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

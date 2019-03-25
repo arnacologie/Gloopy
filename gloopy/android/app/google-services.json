@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "701151979543",
+    "firebase_url": "https://gloopy-aebbc.firebaseio.com",
+    "project_id": "gloopy-aebbc",
+    "storage_bucket": "gloopy-aebbc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701151979543:android:173baa79e2eb9fed",
+        "android_client_info": {
+          "package_name": "com.levitte.garnier.gloopy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701151979543-b59c0i050br5ofk12et29mv3cipo8ueq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-ZhaWaW6poOlIfdiRk4yi6uK9UjycV6Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
