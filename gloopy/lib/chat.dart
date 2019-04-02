@@ -88,6 +88,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  //resolve the groupChatId
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
@@ -100,6 +101,7 @@ class ChatScreenState extends State<ChatScreen> {
     setState(() {});
   }
 
+  //getImage from gallery then upload it to firebase
   Future getImage() async {
     imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 
@@ -170,7 +172,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget buildItem(int index, DocumentSnapshot document) {
     if (document['idFrom'] == id) {
       // Right (my message)
-      return Row(
+      return Row(   
         children: <Widget>[
           document['type'] == 0
               // Text

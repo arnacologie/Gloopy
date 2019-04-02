@@ -10,6 +10,8 @@ import 'package:gloopy/const.dart';
 import 'package:gloopy/login.dart';
 import 'package:gloopy/settings.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,6 +28,10 @@ class MainScreenState extends State<MainScreen> {
   MainScreenState({Key key, @required this.currentUserId});
 
   final String currentUserId;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  
+
 
   bool isLoading = false;
   List<Choice> choices = const <Choice>[
@@ -210,8 +216,6 @@ class MainScreenState extends State<MainScreen> {
     });
 
     await FirebaseAuth.instance.signOut();
-    await googleSignIn.disconnect();
-    await googleSignIn.signOut();
 
     this.setState(() {
       isLoading = false;
@@ -220,6 +224,43 @@ class MainScreenState extends State<MainScreen> {
     Navigator.of(context)
         .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MyApp()), (Route<dynamic> route) => false);
   }
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseCloudMessaging_Listeners();
+  }
+
+  void firebaseCloudMessaging_Listeners() {
+  if (Platform.isIOS) iOS_Permission();
+
+  _firebaseMessaging.getToken().then((token){
+    print(token);
+  });
+
+  _firebaseMessaging.configure(
+    onMessage: (Map<String, dynamic> message) async {
+      print('on message $message');
+    },
+    onResume: (Map<String, dynamic> message) async {
+      print('on resume $message');
+    },
+    onLaunch: (Map<String, dynamic> message) async {
+      print('on launch $message');
+    },
+  );
+}
+
+void iOS_Permission() {
+  _firebaseMessaging.requestNotificationPermissions(
+      IosNotificationSettings(sound: true, badge: true, alert: true)
+  );
+  _firebaseMessaging.onIosSettingsRegistered
+      .listen((IosNotificationSettings settings)
+  {
+    print("Settings registered: $settings");
+  });
+}
 
   @override
   Widget build(BuildContext context) {
