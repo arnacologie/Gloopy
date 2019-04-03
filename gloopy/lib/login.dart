@@ -67,7 +67,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     prefs = await SharedPreferences.getInstance();
 
-    isLoggedIn = await googleSignIn.isSignedIn();
+    isLoggedIn = await firebaseAuth.currentUser() == null ? false : true;
     if (isLoggedIn) {
       Navigator.push(
         context,
@@ -97,6 +97,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     _formKey.currentState.save();
     if (_formKey.currentState.validate()) {
+
       FirebaseUser firebaseUser = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password)
             .catchError((onError){

@@ -30,6 +30,7 @@ class MainScreenState extends State<MainScreen> {
   final String currentUserId;
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
+
   
 
 
@@ -261,6 +262,8 @@ void iOS_Permission() {
     print("Settings registered: $settings");
   });
 }
+
+  
 
   @override
   Widget build(BuildContext context) {

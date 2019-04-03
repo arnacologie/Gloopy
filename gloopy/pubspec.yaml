@@ -60,6 +60,7 @@ flutter:
      - images/mimi7.gif
      - images/mimi8.gif
      - images/mimi9.gif
+     - images/logos/ic_launcher.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
