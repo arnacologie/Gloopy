@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gloopy/register.dart';
 import 'package:gloopy/test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyApp extends StatelessWidget {
@@ -49,15 +51,19 @@ class LoginScreenState extends State<LoginScreen> {
   final double _spaceBetweenFields = 20.0;
   final double _buttonHeight = 50.0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   bool isLoading = false;
   bool isLoggedIn = false;
   FirebaseUser currentUser;
+  String currentFCMToken;
 
   @override
   void initState() {
     super.initState();
+    firebaseCloudMessaging_Listeners();
     isSignedIn();
+
   }
 
   void isSignedIn() async {
@@ -79,6 +85,40 @@ class LoginScreenState extends State<LoginScreen> {
       isLoading = false;
     });
   }
+
+  void firebaseCloudMessaging_Listeners() {
+  if (Platform.isIOS) iOS_Permission();
+
+
+
+  _firebaseMessaging.configure(
+    onMessage: (Map<String, dynamic> message) async {
+      print('on message $message');
+    },
+    onResume: (Map<String, dynamic> message) async {
+      print('on resume $message');
+    },
+    onLaunch: (Map<String, dynamic> message) async {
+      print('on launch $message');
+    },
+  );
+  _firebaseMessaging.getToken().then((ok){
+    print(ok);
+    currentFCMToken = ok;
+  });
+}
+
+void iOS_Permission() {
+  _firebaseMessaging.requestNotificationPermissions(
+      IosNotificationSettings(sound: true, badge: true, alert: true)
+  );
+  _firebaseMessaging.onIosSettingsRegistered
+      .listen((IosNotificationSettings settings)
+  {
+    print("Settings registered: $settings");
+  });
+}
+
 
   Future<Null> handleSignIn() async {
     prefs = await SharedPreferences.getInstance();
@@ -120,10 +160,6 @@ class LoginScreenState extends State<LoginScreen> {
       final List<DocumentSnapshot> documents = result.documents;
       if (documents.length == 0) {
         // Update data to server if new user
-        Firestore.instance
-            .collection('users')
-            .document(firebaseUser.uid)
-            .setData({'nickname': firebaseUser.displayName, 'photoUrl': firebaseUser.photoUrl, 'id': firebaseUser.uid});
 
         // Write data to local
         currentUser = firebaseUser;
@@ -132,6 +168,11 @@ class LoginScreenState extends State<LoginScreen> {
         await prefs.setString('photoUrl', currentUser.photoUrl);
       } else {
         // Write data to local
+        Firestore.instance
+            .collection('users')
+            .document(firebaseUser.uid)
+            .updateData({'fcm_token': currentFCMToken});
+        
         await prefs.setString('id', documents[0]['id']);
         await prefs.setString('nickname', documents[0]['nickname']);
         await prefs.setString('photoUrl', documents[0]['photoUrl']);
