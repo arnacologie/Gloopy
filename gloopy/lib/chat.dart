@@ -51,6 +51,8 @@ class ChatScreenState extends State<ChatScreen> {
   String peerId;
   String peerAvatar;
   String id;
+  String nickname;
+  String photoUrl;
 
   var listMessage;
   String groupChatId;
@@ -92,6 +94,8 @@ class ChatScreenState extends State<ChatScreen> {
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
+    nickname = prefs.getString('nickname') ?? '';
+    photoUrl = prefs.getString('photoUrl') ?? '';
     if (id.hashCode <= peerId.hashCode) {
       groupChatId = '$id-$peerId';
     } else {
@@ -156,6 +160,8 @@ class ChatScreenState extends State<ChatScreen> {
           documentReference,
           {
             'idFrom': id,
+            'senderNickname' : nickname,
+            'senderPhotoURL' : photoUrl,
             'idTo': peerId,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,

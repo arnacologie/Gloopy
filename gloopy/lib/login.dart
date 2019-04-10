@@ -10,6 +10,7 @@ import 'package:gloopy/const.dart';
 import 'package:gloopy/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gloopy/register.dart';
+import 'package:gloopy/test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,9 +23,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: themeColor,
       ),
-      //home: LoginScreen(title: 'CHAT DEMO'),
       //home: LoginScreen(title: "Connexion",),
-      home: LoginScreen(title: "Connexion",),
+      home: Test(),
       debugShowCheckedModeBanner: false,
     );
   }
