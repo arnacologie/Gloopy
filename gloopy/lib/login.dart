@@ -10,7 +10,6 @@ import 'package:gloopy/const.dart';
 import 'package:gloopy/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gloopy/register.dart';
-import 'package:gloopy/test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,6 +51,7 @@ class LoginScreenState extends State<LoginScreen> {
   final double _buttonHeight = 50.0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  //FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   bool isLoading = false;
   bool isLoggedIn = false;
@@ -90,7 +90,6 @@ class LoginScreenState extends State<LoginScreen> {
   if (Platform.isIOS) iOS_Permission();
 
 
-
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) async {
       print('on message $message');
@@ -127,14 +126,6 @@ void iOS_Permission() {
       isLoading = true;
     });
 
-    // GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    // GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-    // final AuthCredential credential = GoogleAuthProvider.getCredential(
-    //   accessToken: googleAuth.accessToken,
-    //   idToken: googleAuth.idToken,
-    // );
-
     _formKey.currentState.save();
     if (_formKey.currentState.validate()) {
 
@@ -144,14 +135,6 @@ void iOS_Permission() {
               print(onError);
               isLoading = false;
             });
-          //.then((signedInUser) {
-        //UserManagement.storeNewUser(signedInUser, _nickname, context);
-      //}).catchError((e) {
-        //print(e);
-      //});
-      
-
-    //FirebaseUser firebaseUser = await firebaseAuth.signInWithCredential(credential);
 
     if (firebaseUser != null) {
       // Check is already sign up
