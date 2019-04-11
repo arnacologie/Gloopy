@@ -14,8 +14,7 @@ class SignInPage extends StatefulWidget {
   _SignInPageState createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _SignInPageState extends State<SignInPage> {;
   String _email;
   String _password;
   final double _spaceBetweenFields = 20.0;
