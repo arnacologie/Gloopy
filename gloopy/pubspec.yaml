@@ -26,6 +26,10 @@ dependencies:
   firebase_storage: 1.0.4
   firebase_messaging: any
   cached_network_image: ^0.7.0
+  rxdart: any
+  rx_command: ^4.3.0
+  rx_widgets : any
+  get_it : any
   intl: ^0.15.7
   flutter:
     sdk: flutter

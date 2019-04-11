@@ -10,25 +10,11 @@ import 'package:gloopy/const.dart';
 import 'package:gloopy/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gloopy/register.dart';
-import 'package:gloopy/test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chat Demo',
-      theme: ThemeData(
-        primaryColor: themeColor,
-      ),
-      //home: LoginScreen(title: "Connexion",),
-      home: Test(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
+
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key, this.title}) : super(key: key);
@@ -51,7 +37,6 @@ class LoginScreenState extends State<LoginScreen> {
   final double _buttonHeight = 50.0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  //FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   bool isLoading = false;
   bool isLoggedIn = false;
@@ -70,9 +55,7 @@ class LoginScreenState extends State<LoginScreen> {
     this.setState(() {
       isLoading = true;
     });
-
     prefs = await SharedPreferences.getInstance();
-
     isLoggedIn = await firebaseAuth.currentUser() == null ? false : true;
     if (isLoggedIn) {
       Navigator.push(
@@ -80,7 +63,6 @@ class LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (context) => MainScreen(currentUserId: prefs.getString('id'))),
       );
     }
-
     this.setState(() {
       isLoading = false;
     });

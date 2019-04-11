@@ -9,11 +9,27 @@ import 'package:gloopy/chat.dart';
 import 'package:gloopy/const.dart';
 import 'package:gloopy/login.dart';
 import 'package:gloopy/settings.dart';
+import 'package:gloopy/test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 
 
 void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Chat Demo',
+      theme: ThemeData(
+        primaryColor: themeColor,
+      ),
+      //home: LoginScreen(title: "Connexion",),
+      home: Test(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
 
 class MainScreen extends StatefulWidget {
   final String currentUserId;
@@ -26,13 +42,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   MainScreenState({Key key, @required this.currentUserId});
-
   final String currentUserId;
-
-
-  
-
-
   bool isLoading = false;
   List<Choice> choices = const <Choice>[
     const Choice(title: 'Settings', icon: Icons.settings),

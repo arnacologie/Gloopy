@@ -229,7 +229,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         prefs = await SharedPreferences.getInstance();
         await prefs.setString('id', firebaseUser.uid);
         await prefs.setString('nickname', _nickname);
-        await prefs.setString('photoUrl', firebaseUser.photoUrl);
+        //await prefs.setString('photoUrl', firebaseUser.photoUrl);
     }
 
   }
