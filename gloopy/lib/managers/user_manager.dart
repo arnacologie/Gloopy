@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gloopy/Utils/mainPage.dart';
-import 'package:gloopy/main.dart';
+import 'package:gloopy/Utils/FadeNavRoute.dart';
+import 'package:gloopy/views/mainPage.dart';
 import 'package:rx_command/rx_command.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,55 +30,49 @@ class UserManager {
   RxCommand<BuildContext, bool> isSignedIn;
   RxCommand<LoginInput, bool> signIn;
   RxCommand<RegisterInput, bool> createAccount;
+  RxCommand<void, Stream<QuerySnapshot>> getContacts;
   //RxCommand isSignedIn;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   SharedPreferences prefs;
   FirebaseUser currentUser;
   String currentFCMToken;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  String currentUserId;
 
   UserManager() {
 
     signIn = RxCommand.createAsync((LoginInput loginInput) async {
-
       prefs = await SharedPreferences.getInstance();
-        FirebaseUser firebaseUser = await FirebaseAuth.instance
+        currentUser = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
                 email: loginInput.email, password: loginInput.password)
             .catchError((onError) {
           print(onError);
         });
-        if (firebaseUser != null) {
-
+        if (currentUser != null) {
           final QuerySnapshot result = await Firestore.instance
               .collection('users')
-              .where('id', isEqualTo: firebaseUser.uid)
+              .where('id', isEqualTo: currentUser.uid)
               .getDocuments();
           final List<DocumentSnapshot> documents = result.documents;
           if (documents.length == 0) {
-            currentUser = firebaseUser;
             await prefs.setString('id', currentUser.uid);
             await prefs.setString('nickname', currentUser.displayName);
             await prefs.setString('photoUrl', currentUser.photoUrl);
           } else {
-
             Firestore.instance
                 .collection('users')
-                .document(firebaseUser.uid)
+                .document(currentUser.uid)
                 .updateData({'fcm_token': currentFCMToken});
 
             await prefs.setString('id', documents[0]['id']);
             await prefs.setString('nickname', documents[0]['nickname']);
-            await prefs.setString('photoUrl', documents[0]['photoUrl']);
-            await prefs.setString('aboutMe', documents[0]['aboutMe']);
+            await prefs.setString('photoUrl', documents[0]['photo_url']);
+            await prefs.setString('aboutMe', documents[0]['about_me']);
           }
           Fluttertoast.showToast(msg: "Sign in success");
-
-          currentUserId = firebaseUser.uid;
           Navigator.push(
             loginInput.context,
-            MaterialPageRoute(
+            FadeNavRoute(
                 builder: (context) => MainPage()),
           );
         }else Fluttertoast.showToast(msg: "Sign in fail");
@@ -94,10 +88,9 @@ class UserManager {
       prefs = await SharedPreferences.getInstance();
       isLoggedIn = await firebaseAuth.currentUser() == null ? false : true;
       if (isLoggedIn) {
-        currentUserId = prefs.getString('id');
         Navigator.push(
           context,
-          MaterialPageRoute( builder: (context) => MainPage()),
+          FadeNavRoute( builder: (context) => MainPage()),
         );
       }
     });
@@ -109,12 +102,16 @@ class UserManager {
         password: registerInput.password,
       );
       Firestore.instance.collection('users').document(firebaseUser.uid).setData(
-          {'nickname': registerInput.nickname, 'photoUrl': 'https://firebasestorage.googleapis.com/v0/b/gloopy-aebbc.appspot.com/o/ic_launcher.png.png?alt=media&token=a1dfcc89-948d-452f-b849-d2cf5a38a396', 'id': firebaseUser.uid});
+          {'nickname': registerInput.nickname, 'photo_url': 'https://firebasestorage.googleapis.com/v0/b/gloopy-aebbc.appspot.com/o/ic_launcher.png.png?alt=media&token=a1dfcc89-948d-452f-b849-d2cf5a38a396', 'id': firebaseUser.uid});
       prefs = await SharedPreferences.getInstance();
       await prefs.setString('id', firebaseUser.uid);
       await prefs.setString('nickname', registerInput.nickname);
       return true;
     });
+
+    getContacts = RxCommand.createSync((_)=> Firestore.instance.collection('users').where("contacts_id", arrayContains: currentUser.uid).snapshots());
+    getContacts();
+    
   }
 
   void firebaseCloudMessagingListeners() {

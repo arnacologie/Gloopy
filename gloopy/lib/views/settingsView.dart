@@ -93,7 +93,7 @@ class SettingsScreenState extends State<SettingsScreen> {
           Firestore.instance
               .collection('users')
               .document(id)
-              .updateData({'nickname': nickname, 'aboutMe': aboutMe, 'photoUrl': photoUrl}).then((data) async {
+              .updateData({'nickname': nickname, 'about_me': aboutMe, 'photo_url': photoUrl}).then((data) async {
             await prefs.setString('photoUrl', photoUrl);
             setState(() {
               isLoading = false;
@@ -136,7 +136,7 @@ class SettingsScreenState extends State<SettingsScreen> {
     Firestore.instance
         .collection('users')
         .document(id)
-        .updateData({'nickname': nickname, 'aboutMe': aboutMe, 'photoUrl': photoUrl}).then((data) async {
+        .updateData({'nickname': nickname, 'about_me': aboutMe, 'photo_url': photoUrl}).then((data) async {
       await prefs.setString('nickname', nickname);
       await prefs.setString('aboutMe', aboutMe);
       await prefs.setString('photoUrl', photoUrl);

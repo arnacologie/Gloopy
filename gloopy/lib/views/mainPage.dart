@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gloopy/Utils/contactView.dart';
-import 'package:gloopy/settingsView.dart';
+import 'package:gloopy/views/settingsView.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -15,6 +15,7 @@ class _MainPageState extends State<MainPage> {
       length: 6,
           child: Scaffold(
             body: TabBarView(
+              physics: NeverScrollableScrollPhysics(),
               children: <Widget>[
                 ContactView(),
                 Container(),

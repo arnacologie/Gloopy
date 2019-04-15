@@ -236,7 +236,7 @@ class ChatScreenState extends State<ChatScreen> {
                     )
                   // Sticker
                   : Container(
-                      child: new Image.asset(
+                      child: Image.asset(
                         'images/${document['content']}.gif',
                         width: 100.0,
                         height: 100.0,

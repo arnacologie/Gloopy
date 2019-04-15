@@ -4,12 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gloopy/Utils/FadeNavRoute.dart';
 import 'package:gloopy/chat.dart';
 import 'package:gloopy/const.dart';
 import 'package:gloopy/main.dart';
 import 'package:gloopy/managers/user_manager.dart';
 import 'package:gloopy/service_locator.dart';
-import 'package:gloopy/settingsView.dart';
+import 'package:gloopy/views/settingsView.dart';
 
 class ContactView extends StatefulWidget {
 
@@ -23,7 +24,7 @@ class ContactViewState extends State<ContactView> {
     const Choice(title: 'Settings', icon: Icons.settings),
     const Choice(title: 'Log out', icon: Icons.exit_to_app),
   ];
-
+  
   Future<bool> onBackPress() {
     openDialog();
     return Future.value(false);
@@ -119,8 +120,9 @@ class ContactViewState extends State<ContactView> {
     }
   }
 
+
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
-    if (document['id'] == sl.get<UserManager>().currentUserId) {
+    if (document['id'] == sl.get<UserManager>().currentUser.uid) {
       return Container();
     } else {
       return Container(
@@ -138,7 +140,7 @@ class ContactViewState extends State<ContactView> {
                         height: 50.0,
                         padding: EdgeInsets.all(15.0),
                       ),
-                  imageUrl: document['photoUrl'],
+                  imageUrl: document['photo_url'],
                   width: 50.0,
                   height: 50.0,
                   fit: BoxFit.cover,
@@ -160,7 +162,7 @@ class ContactViewState extends State<ContactView> {
                       ),
                       Container(
                         child: Text(
-                          'About me: ${document['aboutMe'] ?? 'Not available'}',
+                          'About me: ${document['about_me'] ?? 'Not available'}',
                           style: TextStyle(color: primaryColor),
                         ),
                         alignment: Alignment.centerLeft,
@@ -176,10 +178,10 @@ class ContactViewState extends State<ContactView> {
           onPressed: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(
+                FadeNavRoute(
                     builder: (context) => Chat(
                           peerId: document.documentID,
-                          peerAvatar: document['photoUrl'],
+                          peerAvatar: document['photo_url'],
                         )));
           },
           color: greyColor2,
@@ -197,7 +199,7 @@ class ContactViewState extends State<ContactView> {
       handleSignOut();
     } else {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => SettingsView()));
+          context, FadeNavRoute(builder: (context) => SettingsView()));
     }
   }
 
@@ -210,7 +212,7 @@ class ContactViewState extends State<ContactView> {
       isLoading = false;
     });
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => MyApp()),
+        FadeNavRoute(builder: (context) => MyApp()),
         (Route<dynamic> route) => false);
   }
 
@@ -252,7 +254,7 @@ class ContactViewState extends State<ContactView> {
             // List
             Container(
               child: StreamBuilder(
-                stream: Firestore.instance.collection('users').snapshots(),
+                stream: sl.get<UserManager>().getContacts.lastResult,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
@@ -271,7 +273,6 @@ class ContactViewState extends State<ContactView> {
                 },
               ),
             ),
-
             // Loading
             Positioned(
               child: isLoading
