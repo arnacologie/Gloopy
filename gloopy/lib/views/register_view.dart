@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gloopy/Utils/Validator.dart';
 import 'package:gloopy/managers/user_manager.dart';
 import 'package:gloopy/service_locator.dart';
+import 'package:gloopy/utils/validator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationPage extends StatefulWidget {

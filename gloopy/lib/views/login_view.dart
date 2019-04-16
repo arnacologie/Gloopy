@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gloopy/Utils/FadeNavRoute.dart';
-import 'package:gloopy/Utils/Validator.dart';
 import 'package:gloopy/const.dart';
 import 'package:gloopy/managers/user_manager.dart';
-import 'package:gloopy/register.dart';
 import 'package:gloopy/service_locator.dart';
+import 'package:gloopy/utils/fade_nav_route.dart';
+import 'package:gloopy/utils/validator.dart';
+import 'package:gloopy/views/register_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rx_widgets/rx_widgets.dart';
 

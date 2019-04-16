@@ -4,13 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gloopy/Utils/FadeNavRoute.dart';
-import 'package:gloopy/chat.dart';
 import 'package:gloopy/const.dart';
 import 'package:gloopy/main.dart';
 import 'package:gloopy/managers/user_manager.dart';
 import 'package:gloopy/service_locator.dart';
-import 'package:gloopy/views/settingsView.dart';
+import 'package:gloopy/utils/fade_nav_route.dart';
+import 'package:gloopy/views/discussion_view.dart';
+import 'package:gloopy/views/settings_view.dart';
 
 class ContactView extends StatefulWidget {
 

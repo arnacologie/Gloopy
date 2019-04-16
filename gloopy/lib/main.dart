@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:gloopy/const.dart';
-import 'package:gloopy/login.dart';
 import 'package:gloopy/service_locator.dart';
+import 'package:gloopy/views/test_view.dart';
 
 void main() {
   setUpServiceLocator();
@@ -17,10 +17,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: themeColor,
       ),
-      home: LoginScreen(
-        title: "Connexion",
-      ),
-      //home: Test(),
+      // home: LoginScreen(
+      //   title: "Connexion",
+      // ),
+      //home: PreLoginView(),
+      home: TestView(),
       debugShowCheckedModeBanner: false,
     );
   }

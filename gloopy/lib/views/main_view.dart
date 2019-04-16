@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gloopy/Utils/contactView.dart';
-import 'package:gloopy/views/settingsView.dart';
+import 'package:gloopy/views/contact_view.dart';
+import 'package:gloopy/views/settings_view.dart';
 
 class MainPage extends StatefulWidget {
   @override

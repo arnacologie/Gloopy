@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gloopy/Utils/FadeNavRoute.dart';
-import 'package:gloopy/views/mainPage.dart';
+import 'package:gloopy/utils/fade_nav_route.dart';
+import 'package:gloopy/views/main_view.dart';
 import 'package:rx_command/rx_command.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
