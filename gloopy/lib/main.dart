@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:gloopy/const.dart';
 import 'package:gloopy/service_locator.dart';
+import 'package:gloopy/views/pre_login_view.dart';
 import 'package:gloopy/views/test_view.dart';
 
 void main() {

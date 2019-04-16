@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:gloopy/utils/fade_nav_route.dart';
+import 'package:gloopy/views/pre_login_view.dart';
 
 class TestView extends StatefulWidget {
   @override
@@ -19,6 +23,7 @@ class _TestViewState extends State<TestView>
     _animation = Tween(begin: 3.0, end: 4.0).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.ease));
     _animationController.forward();
+    Timer(Duration(seconds: 4), () =>Navigator.pushReplacement(context,FadeNavRoute(builder: (context) => PreLoginView()),),);
     super.initState();
   }
 

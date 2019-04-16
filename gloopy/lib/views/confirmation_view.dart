@@ -11,9 +11,6 @@ class _ConfirmationViewState extends State<ConfirmationView> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
-        appBar: AppBar(
-          title: Text("page 2"),
-        ),
         body: Container(
             child: Center(
           child: Column(

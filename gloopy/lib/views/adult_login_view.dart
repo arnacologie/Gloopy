@@ -8,7 +8,7 @@ class AdultLoginView extends StatefulWidget {
 }
 
 class _AdultLoginViewState extends State<AdultLoginView> {
-GlobalKey<FormState> _connexionFormKey;
+  GlobalKey<FormState> _connexionFormKey;
 
   @override
   Widget build(BuildContext context) {
@@ -34,64 +34,55 @@ GlobalKey<FormState> _connexionFormKey;
                           child: TextFormField(
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: "Confirmer votre mot de passe"),
+                                labelText: "Mot de passe"),
                           ),
                         ),
                         Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text("J'ai oublié mon mot de passe.", 
-                            style: TextStyle(
-                              color: Colors.blue, 
-                              decoration: TextDecoration.underline,
-                            ),
-                          )
-                        )
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "J'ai oublié mon mot de passe.",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ))
                       ])),
                   Container(
-                    padding: EdgeInsets.only(top: 22.5),
-                    child: RaisedButton(
-                      child: Text('Valider'),
-                      onPressed: (){}
-                    )
-                  ),
+                      padding: EdgeInsets.only(top: 22.5),
+                      child: RaisedButton(
+                          child: Text('Valider'), onPressed: () {})),
                   Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Nouveau chez Innovr?',
-                              style: TextStyle(fontFamily: 'Montserrat'),
-                            ),
-                            SizedBox(
-                              width: 5.0,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    FadeNavRoute(
-                                        builder: (context) =>
-                                            AdultRegisterView()));
-                              },
-                              child: Container(
-                                width: 70,
-                                height: 50,
-                                child: Center(
-                                  child: Text('S\'inscrire',
-                                      style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.bold,
-                                          decoration:
-                                              TextDecoration.underline)),
-                                ),
-                              ),
-                            )
-                          ],
-                        )
-                ]
-            )
-          )
-        )
-      );
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Nouveau chez Gloopy?',
+                        style: TextStyle(fontFamily: 'Montserrat'),
+                      ),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              FadeNavRoute(
+                                  builder: (context) => AdultRegisterView()));
+                        },
+                        child: Container(
+                          width: 70,
+                          height: 50,
+                          child: Center(
+                            child: Text('S\'inscrire',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline)),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ]))));
   }
 }
