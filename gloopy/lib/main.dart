@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:gloopy/const.dart';
 import 'package:gloopy/service_locator.dart';
+import 'package:gloopy/views/launch_view.dart';
+import 'package:gloopy/views/playground_view.dart';
 import 'package:gloopy/views/pre_login_view.dart';
-import 'package:gloopy/views/test_view.dart';
 
 void main() {
   setUpServiceLocator();
@@ -16,13 +17,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Chat Demo',
       theme: ThemeData(
-        primaryColor: themeColor,
+        primaryColor: darkSkyColor,
+        //hintColor: Colors.white
       ),
       // home: LoginScreen(
       //   title: "Connexion",
       // ),
       //home: PreLoginView(),
-      home: TestView(),
+      home: LaunchView(),
+      //home:PlaygroundView(),
       debugShowCheckedModeBanner: false,
     );
   }

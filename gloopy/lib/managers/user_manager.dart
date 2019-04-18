@@ -46,7 +46,7 @@ class UserManager {
             .signInWithEmailAndPassword(
                 email: loginInput.email, password: loginInput.password)
             .catchError((onError) {
-          print(onError);
+          print("onError: "+onError.toString());
         });
         if (currentUser != null) {
           final QuerySnapshot result = await Firestore.instance
@@ -80,7 +80,7 @@ class UserManager {
       return true;
     });
     signIn.isExecuting.listen((onData){
-      print(onData);
+      print("signIn Exec "+onData.toString());
     });
 
     isSignedIn = RxCommand.createAsync((BuildContext context) async {
@@ -128,7 +128,7 @@ class UserManager {
       },
     );
     _firebaseMessaging.getToken().then((fcmToken) {
-      print(fcmToken);
+      print("fcmToken = "+fcmToken);
       currentFCMToken = fcmToken;
     });
   }

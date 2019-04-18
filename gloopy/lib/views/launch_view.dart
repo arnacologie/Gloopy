@@ -4,16 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:gloopy/utils/fade_nav_route.dart';
 import 'package:gloopy/views/pre_login_view.dart';
 
-class TestView extends StatefulWidget {
+class LaunchView extends StatefulWidget {
   @override
-  _TestViewState createState() => _TestViewState();
+  _LaunchViewState createState() => _LaunchViewState();
 }
 
-class _TestViewState extends State<TestView>
+class _LaunchViewState extends State<LaunchView>
     with SingleTickerProviderStateMixin {
   static const _aDuration = const Duration(milliseconds: 950);
   AnimationController _animationController;
   Animation _animation;
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -26,6 +32,8 @@ class _TestViewState extends State<TestView>
     Timer(Duration(seconds: 4), () =>Navigator.pushReplacement(context,FadeNavRoute(builder: (context) => PreLoginView()),),);
     super.initState();
   }
+  
+
 
   loopAnimation() {
     if (_animation.value == 4.0)
@@ -41,21 +49,21 @@ class _TestViewState extends State<TestView>
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-              Image.asset(
-                'images/backgrounds/FOND-PLANET.jpg',
-                width: size.width,
-                height: size.height,
-                fit: BoxFit.cover,
-              ),
+            Image.asset(
+              'images/backgrounds/background_small_p.jpg',
+              width: size.width,
+              height: size.height,
+              fit: BoxFit.cover,
+            ),
             ScaleTransition(
-                scale: _animation,
-                child: Image.asset(
-                  'images/logos/gloopy_character.png',
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.fitHeight,
-                ),
+              scale: _animation,
+              child: Image.asset(
+                'images/logos/gloopy_character.png',
+                width: 50,
+                height: 50,
+                fit: BoxFit.fitHeight,
               ),
+            ),
           ],
         ),
       ),
