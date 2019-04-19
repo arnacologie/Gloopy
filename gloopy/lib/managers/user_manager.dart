@@ -48,6 +48,7 @@ class UserManager {
             .catchError((onError) {
           print("onError: "+onError.toString());
         });
+        print("currentUser"+currentUser.toString());
         if (currentUser != null) {
           final QuerySnapshot result = await Firestore.instance
               .collection('users')
@@ -86,7 +87,8 @@ class UserManager {
     isSignedIn = RxCommand.createAsync((BuildContext context) async {
       bool isLoggedIn;
       prefs = await SharedPreferences.getInstance();
-      isLoggedIn = await firebaseAuth.currentUser() == null ? false : true;
+      currentUser = await firebaseAuth.currentUser();
+      isLoggedIn = currentUser == null ? false : true;
       if (isLoggedIn) {
         Navigator.push(
           context,

@@ -9,7 +9,7 @@ import 'package:gloopy/main.dart';
 import 'package:gloopy/managers/user_manager.dart';
 import 'package:gloopy/service_locator.dart';
 import 'package:gloopy/utils/fade_nav_route.dart';
-import 'package:gloopy/views/discussion_view.dart';
+import 'package:gloopy/views/chat_view.dart';
 import 'package:gloopy/views/settings_view.dart';
 
 class ContactView extends StatefulWidget {
@@ -179,7 +179,7 @@ class ContactViewState extends State<ContactView> {
             Navigator.push(
                 context,
                 FadeNavRoute(
-                    builder: (context) => Chat(
+                    builder: (context) => ChatView(
                           peerId: document.documentID,
                           peerAvatar: document['photo_url'],
                         )));
@@ -219,42 +219,15 @@ class ContactViewState extends State<ContactView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        actions: <Widget>[
-          PopupMenuButton<Choice>(
-            onSelected: onItemMenuPress,
-            itemBuilder: (BuildContext context) {
-              return choices.map((Choice choice) {
-                return PopupMenuItem<Choice>(
-                    value: choice,
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          choice.icon,
-                          color: primaryColor,
-                        ),
-                        Container(
-                          width: 10.0,
-                        ),
-                        Text(
-                          choice.title,
-                          style: TextStyle(color: primaryColor),
-                        ),
-                      ],
-                    ));
-              }).toList();
-            },
-          ),
-        ],
-      ),
+      
       body: WillPopScope(
         child: Stack(
           children: <Widget>[
             // List
             Container(
+              padding: EdgeInsets.only(top: 20.0),
               child: StreamBuilder(
-                stream: sl.get<UserManager>().getContacts.lastResult,
+                stream: Firestore.instance.collection('users').snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(

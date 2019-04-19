@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gloopy/const.dart';
+import 'package:gloopy/test.dart';
+import 'package:gloopy/views/chat_view.dart';
 import 'package:gloopy/views/contact_view.dart';
 import 'package:gloopy/views/settings_view.dart';
 
@@ -18,8 +21,9 @@ class _MainPageState extends State<MainPage> {
               physics: NeverScrollableScrollPhysics(),
               children: <Widget>[
                 ContactView(),
+                //ChatView(),
                 Container(),
-                Container(),
+                ContactTestView(),
                 Container(),
                 Container(),
                 SettingsView()
@@ -28,17 +32,17 @@ class _MainPageState extends State<MainPage> {
         bottomNavigationBar: TabBar(
           tabs: <Widget>[
             //Contacts
-            Tab(icon: Icon(Icons.person_pin)),
+            Tab(icon: Icon(Icons.person_pin, color: darkSkyColor,)),
             //Discussion
-            Tab(icon: Icon(Icons.message)),
+            Tab(icon: Icon(Icons.message, color: darkSkyColor,)),
             //Trophees
-            Tab(icon: Icon(Icons.star)),
+            Tab(icon: Icon(Icons.star, color: darkSkyColor,)),
             //Dessins
-            Tab(icon: Icon(Icons.edit)),
+            Tab(icon: Icon(Icons.edit, color: darkSkyColor,)),
             //Jeux
-            Tab(icon: Icon(Icons.gamepad)),
+            Tab(icon: Icon(Icons.gamepad, color: darkSkyColor,)),
             //Reglages
-            Tab(icon: Icon(Icons.settings)),
+            Tab(icon: Icon(Icons.settings, color: darkSkyColor,)),
           ],
         ),
       ),

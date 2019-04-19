@@ -109,25 +109,32 @@ class _AdultLoginViewState extends State<AdultLoginView> {
                                       },
                                       onSaved: (input) => _password = input,
                                       obscureText: true,
+                                      onEditingComplete: () {
+                                        _formKey.currentState.save();
+                                        if (_formKey.currentState.validate()) {
+                                          sl.get<UserManager>().signIn(
+                                              LoginInput(context, _email,
+                                                  _password, _formKey));
+                                        }
+                                      },
                                       style: TextStyle(color: Colors.white),
                                       decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(
-                                                color: Colors.white,
-                                                width: 2.0),
-                                            borderRadius:
-                                                BorderRadius.circular(25.0)),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(
-                                                color: Colors.white,
-                                                width: 2.0),
-                                            borderRadius:
-                                                BorderRadius.circular(25.0)),
-                                                labelText: "Mot de passe",
+                                          border: OutlineInputBorder(),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                  color: Colors.white,
+                                                  width: 2.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(25.0)),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(
+                                                  color: Colors.white,
+                                                  width: 2.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(25.0)),
+                                          labelText: "Mot de passe",
                                           labelStyle:
-                                              TextStyle(color: Colors.white)
-                                      ),
+                                              TextStyle(color: Colors.white)),
                                       cursorColor: darkSkyColor,
                                     ),
                                   ),
