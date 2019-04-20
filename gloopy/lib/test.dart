@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:gloopy/widgets/animator.dart';
 
 class ContactTestView extends StatefulWidget {
   @override
@@ -10,68 +11,72 @@ class ContactTestView extends StatefulWidget {
 class ContactTestViewState extends State<ContactTestView> {
   Color caughtColor = Colors.grey;
   List<Widget> products;
+  TAnimator _tAnimator;
 
   static double _radiansPerDegree = pi / 180;
   final double _startAngle = -90.0 * _radiansPerDegree;
   Random random;
-
+  Size size;
+  final List<String> planetImages = ['images/planets/PLANET-PRINCESSE-2.png', 'images/planets/PLANET-PRINCESSE-1.png', 'images/planets/PLANET-GLOOPY-1.png', 'images/planets/PLANET-GLOOPY-1.png'];
+  
   @override
   void initState() {
+
+    super.initState();
     products = List<Widget>();
-    for (int i = 0; i < 1; i++) {
+
+    random = Random();
+    for (int i = 0; i < 2; i++) {
       products.add(LayoutId(
         id: 'BUTTON$i',
-        child: Icon(Icons.cloud_circle),
+        //child: Icon(Icons.cloud_circle, size: 75.0,),
+        child: Image.asset(
+                        planetImages[random.nextInt(4)],
+                        width: 100,
+                        fit: BoxFit.fitWidth,
+                      ),
       ));
     }
-    random = Random();
-    super.initState();
+    _tAnimator = TAnimator(animated: false,);
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
+        _tAnimator,
         CustomMultiChildLayout(
           delegate: _CircularLayoutDelegate(
-            itemCount: 7,
-            radius: 45.0,
-            sAngle: -(random.nextDouble()*20.0+70.0) * _radiansPerDegree
+            itemCount: 8,
+            radius: 135.0,
+            sAngle: -(random.nextDouble()*20.0+110.0) * _radiansPerDegree
           ),
           children: products,
         ),
         CustomMultiChildLayout(
           delegate: _CircularLayoutDelegate(
-            itemCount: 7,
-            radius: 95.0,
-            sAngle: -(random.nextDouble()*20.0+70.0) * _radiansPerDegree
+            itemCount: 8,
+            radius: 275.0,
+            sAngle: -(random.nextDouble()*20.0+110.0) * _radiansPerDegree
           ),
           children: products,
         ),
         CustomMultiChildLayout(
           delegate: _CircularLayoutDelegate(
-            itemCount: 7,
-            radius: 145.0,
-            sAngle: -(random.nextDouble()*20.0+70.0) * _radiansPerDegree
+            itemCount: 8,
+            radius: 415.0,
+            sAngle: -(random.nextDouble()*20.0+110.0) * _radiansPerDegree
           ),
           children: products,
         ),
         CustomMultiChildLayout(
           delegate: _CircularLayoutDelegate(
-            itemCount: 7,
-            radius: 195.0,
-            sAngle: -(random.nextDouble()*20.0+70.0) * _radiansPerDegree
+            itemCount: 8,
+            radius: 555.0,
+            sAngle: -(random.nextDouble()*20.0+110.0) * _radiansPerDegree
           ),
           children: products,
         ),
-        CustomMultiChildLayout(
-          delegate: _CircularLayoutDelegate(
-            itemCount: 7,
-            radius: 245.0,
-            sAngle: -(random.nextDouble()*20.0+70.0) * _radiansPerDegree
-          ),
-          children: products,
-        )
       ],
     );
   }
@@ -84,8 +89,7 @@ class _CircularLayoutDelegate extends MultiChildLayoutDelegate {
   final double radius;
   final double sAngle;
   static double _radiansPerDegree = pi / 180;
-  final double _startAngle = -90.0 * _radiansPerDegree;
-  double _itemSpacing = 360.0 / 7.0;
+  double _itemSpacing = 360.0 / 8.0;
   double _calculateItemAngle(int index) {
     return sAngle + index * _itemSpacing * _radiansPerDegree;
   }
@@ -98,7 +102,7 @@ class _CircularLayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   void performLayout(Size size) {
-    center = Offset(size.width / 2, size.height / 2);
+    center = Offset(size.width / 2, size.height);
     for (int i = 0; i < itemCount; i++) {
       final String actionButtonId = '$actionButton$i';
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gloopy/utils/fade_nav_route.dart';
 import 'package:gloopy/views/pre_login_view.dart';
+import 'package:gloopy/widgets/animator.dart';
 
 class LaunchView extends StatefulWidget {
   @override
@@ -14,12 +15,8 @@ class _LaunchViewState extends State<LaunchView>
   static const _aDuration = const Duration(milliseconds: 950);
   AnimationController _animationController;
   Animation _animation;
+  TAnimator _tAnimator;
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -30,10 +27,15 @@ class _LaunchViewState extends State<LaunchView>
         parent: _animationController, curve: Curves.ease));
     _animationController.forward();
     Timer(Duration(seconds: 4), () =>Navigator.pushReplacement(context,FadeNavRoute(builder: (context) => PreLoginView()),),);
+    _tAnimator = TAnimator(animated: false,);
     super.initState();
   }
   
-
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   loopAnimation() {
     if (_animation.value == 4.0)
@@ -49,12 +51,7 @@ class _LaunchViewState extends State<LaunchView>
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Image.asset(
-              'images/backgrounds/background_small_p.jpg',
-              width: size.width,
-              height: size.height,
-              fit: BoxFit.cover,
-            ),
+            _tAnimator,
             ScaleTransition(
               scale: _animation,
               child: Image.asset(

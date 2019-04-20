@@ -32,7 +32,7 @@ class _AdultLoginViewState extends State<AdultLoginView> {
   void initState() {
     sl.get<UserManager>().firebaseCloudMessagingListeners();
     sl.get<UserManager>().isSignedIn(context);
-    _tAnimator = TAnimator();
+    _tAnimator = TAnimator(animated: true,);
     super.initState();
   }
 

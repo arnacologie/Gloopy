@@ -16,7 +16,7 @@ class _PreLoginViewState extends State<PreLoginView> {
 
   @override
   void initState() {
-    _tAnimator = TAnimator();
+    _tAnimator = TAnimator(animated: true,);
     super.initState();
   }
 
