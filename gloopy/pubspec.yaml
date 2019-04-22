@@ -31,6 +31,7 @@ dependencies:
   rx_command: ^4.3.0
   rx_widgets : any
   get_it : any
+  circle_wheel_scroll: any
   intl: ^0.15.7
   animator: any
   flutter:

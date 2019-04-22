@@ -20,7 +20,6 @@ class ContactTestView extends StatefulWidget {
 class ContactTestViewState extends State<ContactTestView> {
   Color caughtColor = Colors.grey;
   List<Widget> products;
-  List<Widget> products2;
   TAnimator _tAnimator;
 
   static double _radiansPerDegree = pi / 180;
@@ -40,7 +39,36 @@ class ContactTestViewState extends State<ContactTestView> {
   List<Widget> ring1;
   List<Widget> ring2;
   List<Widget> ring3;
+  List<String> idList;
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    products = List<Widget>();
+    planets = List<Widget>();
+    ring0 = List<Widget>();
+    ring1 = List<Widget>();
+    ring2 = List<Widget>();
+    ring3 = List<Widget>();
+    idList = List<String>();
+
+    random = Random();
+    for (int i = 0; i < 2; i++) {
+      products.add(LayoutId(
+        id: 'BUTTON$i',
+        //child: Icon(Icons.cloud_circle, size: 75.0,),
+        child: Image.asset(
+          planetImages[random.nextInt(4)],
+          width: 100,
+          fit: BoxFit.fitWidth,
+        ),
+      ));
+    }
+    _tAnimator = TAnimator(
+      animated: false,
+    );
+  }
 
   List<Widget> buildRings(
       BuildContext context, List<DocumentSnapshot> documents) {
@@ -54,30 +82,34 @@ class ContactTestViewState extends State<ContactTestView> {
       switch (noRing % 4) {
         case 0:
           ring0.add(LayoutId(
-            id: doc['id'],
+            id: 'BUTTON$noRing',
             child: p,
           ));
-          print(doc['id']);
+          print("Nickname : ${doc['nickname']}");
           break;
         case 1:
           ring1.add(LayoutId(
-            id: doc['id'],
+            id: 'BUTTON$noRing',
             child: p,
           ));
-          print(doc['id']);
+          print("Nickname : ${doc['nickname']}");
 
           break;
         case 2:
           ring2.add(LayoutId(
-            id: doc['id'],
+            id: 'BUTTON$noRing',
             child: p,
           ));
+          print("Nickname : ${doc['nickname']}");
+
           break;
         case 3:
           ring3.add(LayoutId(
-            id: doc['id'],
+            id: 'BUTTON$noRing',
             child: p,
           ));
+          print("Nickname : ${doc['nickname']}");
+
           break;
         default:
       }
@@ -194,23 +226,23 @@ class ContactTestViewState extends State<ContactTestView> {
                       children: <Widget>[
                         CustomMultiChildLayout(
                           delegate: _CircularLayoutDelegate(
-                              itemCount: products.length,
+                              itemCount: 8,
                               radius: 135.0,
                               sAngle: -(random.nextDouble() * 20.0 + 110.0) *
                                   _radiansPerDegree),
-                          children: products,
+                          children: ring0,
                         ),
                         CustomMultiChildLayout(
                           delegate: _CircularLayoutDelegate(
-                              itemCount: products2.length,
+                              itemCount: 8,
                               radius: 275.0,
                               sAngle: -(random.nextDouble() * 20.0 + 110.0) *
                                   _radiansPerDegree),
-                          children: products2,
+                          children: ring1,
                         ),
                         CustomMultiChildLayout(
                           delegate: _CircularLayoutDelegate(
-                              itemCount: ring2.length,
+                              itemCount: 8,
                               radius: 415.0,
                               sAngle: -(random.nextDouble() * 20.0 + 110.0) *
                                   _radiansPerDegree),
@@ -218,7 +250,7 @@ class ContactTestViewState extends State<ContactTestView> {
                         ),
                         CustomMultiChildLayout(
                           delegate: _CircularLayoutDelegate(
-                              itemCount: ring3.length,
+                              itemCount: 8,
                               radius: 555.0,
                               sAngle: -(random.nextDouble() * 20.0 + 110.0) *
                                   _radiansPerDegree),
@@ -247,90 +279,6 @@ class ContactTestViewState extends State<ContactTestView> {
         ),
         onWillPop: () => sl.get<DialogHelper>().onBackPress(context),
       ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    products = List<Widget>();
-    products2 = List<Widget>();
-    planets = List<Widget>();
-    ring0 = List<Widget>();
-    ring1 = List<Widget>();
-    ring2 = List<Widget>();
-    ring3 = List<Widget>();
-
-    random = Random();
-    for (int i = 0; i < 2; i++) {
-      products.add(LayoutId(
-        id: 'BUTTON$i',
-        //child: Icon(Icons.cloud_circle, size: 75.0,),
-        child: FlatButton(
-      onPressed: () {
-            Navigator.push(
-                context,
-                FadeNavRoute(
-                    builder: (context) => ChatView(
-                          peerId: "widget.document.documentID",
-                          peerAvatar: "widget.document['photo_url']",
-                        )));
-          },
-          child: Container(
-        width: 100,
-        height: 150,
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Image.asset(
-              'images/planets/PLANET-GLOOPY-1.png',
-              width: 100,
-              fit: BoxFit.fitWidth,
-            ),
-            Material(
-              child: CachedNetworkImage(
-                placeholder: (context, url) => Container(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 1.0,
-                        valueColor: AlwaysStoppedAnimation<Color>(themeColor),
-                      ),
-                      width: 60.0,
-                      height: 60.0,
-                      padding: EdgeInsets.all(15.0),
-                    ),
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/gloopy-aebbc.appspot.com/o/ic_launcher.png.png?alt=media&token=a1dfcc89-948d-452f-b849-d2cf5a38a396",
-                width: 60.0,
-                height: 60.0,
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(25.0)),
-              clipBehavior: Clip.hardEdge,
-            ),
-            Positioned(
-              bottom: 0,
-              child: Text('nickname'),
-            )
-          ],
-        ),
-      ),
-    ),
-      ));
-      
-    }
-    for (int i = 0; i < 3; i++) {
-      products2.add(LayoutId(
-        id: 'BUTTON$i',
-        //child: Icon(Icons.cloud_circle, size: 75.0,),
-        child: Image.asset(
-          planetImages[random.nextInt(4)],
-          width: 100,
-          fit: BoxFit.fitWidth,
-        ),
-      ));
-      
-    }
-    _tAnimator = TAnimator(
-      animated: false,
     );
   }
 }
@@ -422,6 +370,7 @@ class _CircularLayoutDelegate extends MultiChildLayoutDelegate {
     center = Offset(size.width / 2, size.height);
     for (int i = 0; i < itemCount; i++) {
       final String actionButtonId = '$actionButton$i';
+      print('actionButtonId $actionButtonId itemCount $itemCount');
 
       if (hasChild(actionButtonId)) {
         final Size buttonSize =
@@ -438,6 +387,7 @@ class _CircularLayoutDelegate extends MultiChildLayoutDelegate {
       }
     }
   }
+
   @override
   bool shouldRelayout(_CircularLayoutDelegate oldDelegate) =>
       itemCount != oldDelegate.itemCount || radius != oldDelegate.radius;

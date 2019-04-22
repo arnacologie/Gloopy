@@ -12,3 +12,4 @@ final roseColor = Color(0xfff29fc3);
 final yellowColor = Color(0xfff8f08f);
 final greenishColor = Color(0xff80c5a7);
 final beigeColor = Color(0xfffbd3c4);
+final idList = List<String>();

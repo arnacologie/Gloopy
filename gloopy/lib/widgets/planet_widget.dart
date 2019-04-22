@@ -9,7 +9,6 @@ class Planet extends StatefulWidget {
   final DocumentSnapshot document;
   final String backgroundImg;
 
-
   @override
   _PlanetState createState() => _PlanetState();
   const Planet({
@@ -23,15 +22,15 @@ class _PlanetState extends State<Planet> {
   Widget build(BuildContext context) {
     return FlatButton(
       onPressed: () {
-            Navigator.push(
-                context,
-                FadeNavRoute(
-                    builder: (context) => ChatView(
-                          peerId: widget.document.documentID,
-                          peerAvatar: widget.document['photo_url'],
-                        )));
-          },
-          child: Container(
+        Navigator.push(
+            context,
+            FadeNavRoute(
+                builder: (context) => ChatView(
+                      peerId: widget.document.documentID,
+                      peerAvatar: widget.document['photo_url'],
+                    )));
+      },
+      child: Container(
         width: 100,
         height: 150,
         child: Stack(
