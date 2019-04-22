@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
       // home: LoginScreen(
       //   title: "Connexion",
       // ),
-      home: LaunchView(),
+      //
+      home: Test(),
       //ome: AnotherCircle(),
       debugShowCheckedModeBanner: false,
     );

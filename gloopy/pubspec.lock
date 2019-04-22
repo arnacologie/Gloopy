@@ -130,6 +130,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.11"
+  fluttery:
+    dependency: "direct main"
+    description:
+      name: fluttery
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   get_it:
     dependency: "direct main"
     description:
@@ -179,6 +186,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.3+1"
+  matrix_gesture_detector:
+    dependency: "direct main"
+    description:
+      name: matrix_gesture_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   meta:
     dependency: transitive
     description:
@@ -207,13 +221,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
-  piecemeal:
-    dependency: "direct main"
-    description:
-      name: piecemeal
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.2"
   platform:
     dependency: transitive
     description:

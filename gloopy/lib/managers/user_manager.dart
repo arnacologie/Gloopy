@@ -9,7 +9,6 @@ import 'package:gloopy/utils/fade_nav_route.dart';
 import 'package:gloopy/views/main_view.dart';
 import 'package:rx_command/rx_command.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:piecemeal/piecemeal.dart';
 
 class LoginInput {
   final BuildContext context;
@@ -38,7 +37,6 @@ class UserManager {
   FirebaseUser currentUser;
   String currentFCMToken;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  Array2D _array2D;
 
 
   UserManager() {
@@ -116,7 +114,6 @@ class UserManager {
 
     getContacts = RxCommand.createSync((_)=> Firestore.instance.collection('users').where("contacts_id", arrayContains: currentUser.uid).snapshots());
     getContacts();
-    _array2D = Array2D(4, 8);
   }
 
   void firebaseCloudMessagingListeners() {

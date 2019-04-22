@@ -223,38 +223,75 @@ class ContactTestViewState extends State<ContactTestView> {
                     print(
                         "0 : ${ring0.length}, 1 : ${ring1.length}, 2 : ${ring2.length}, 3 : ${ring3.length},");
                     return Stack(
-                      children: <Widget>[
-                        CustomMultiChildLayout(
-                          delegate: _CircularLayoutDelegate(
-                              itemCount: 8,
-                              radius: 135.0,
-                              sAngle: -(random.nextDouble() * 20.0 + 110.0) *
-                                  _radiansPerDegree),
-                          children: ring0,
-                        ),
-                        CustomMultiChildLayout(
-                          delegate: _CircularLayoutDelegate(
-                              itemCount: 8,
-                              radius: 275.0,
-                              sAngle: -(random.nextDouble() * 20.0 + 110.0) *
-                                  _radiansPerDegree),
-                          children: ring1,
-                        ),
-                        CustomMultiChildLayout(
-                          delegate: _CircularLayoutDelegate(
-                              itemCount: 8,
-                              radius: 415.0,
-                              sAngle: -(random.nextDouble() * 20.0 + 110.0) *
-                                  _radiansPerDegree),
-                          children: ring2,
-                        ),
-                        CustomMultiChildLayout(
-                          delegate: _CircularLayoutDelegate(
-                              itemCount: 8,
-                              radius: 555.0,
-                              sAngle: -(random.nextDouble() * 20.0 + 110.0) *
-                                  _radiansPerDegree),
-                          children: ring3,
+                                          children: <Widget>[
+                        Positioned(
+                          top: 0,
+                          child: GestureDetector(
+                            onPanStart: _onPanStart,
+                            onPanUpdate: _onPanUpdate,
+                            child: Container(
+                                color: Colors.white,
+                                child: Transform.rotate(
+                                  angle: finalAngle,
+                                  child: Center(
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.height*2,
+                                      height: MediaQuery.of(context).size.height*2,
+                                      color: Colors.transparent,
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Positioned.fill(
+                                              child: Stack(
+                                            children: <Widget>[
+                                              CustomMultiChildLayout(
+                                                delegate: _CircularLayoutDelegate(
+                                                    itemCount: 8,
+                                                    radius: 135.0,
+                                                    sAngle: -(random.nextDouble() *
+                                                                20.0 +
+                                                            110.0) *
+                                                        _radiansPerDegree),
+                                                children: ring0,
+                                              ),
+                                              CustomMultiChildLayout(
+                                                delegate: _CircularLayoutDelegate(
+                                                    itemCount: 8,
+                                                    radius: 275.0,
+                                                    sAngle: -(random.nextDouble() *
+                                                                20.0 +
+                                                            110.0) *
+                                                        _radiansPerDegree),
+                                                children: ring1,
+                                              ),
+                                              CustomMultiChildLayout(
+                                                delegate: _CircularLayoutDelegate(
+                                                    itemCount: 8,
+                                                    radius: 415.0,
+                                                    sAngle: -(random.nextDouble() *
+                                                                20.0 +
+                                                            110.0) *
+                                                        _radiansPerDegree),
+                                                children: ring2,
+                                              ),
+                                              CustomMultiChildLayout(
+                                                delegate: _CircularLayoutDelegate(
+                                                    itemCount: 8,
+                                                    radius: 555.0,
+                                                    sAngle: -(random.nextDouble() *
+                                                                20.0 +
+                                                            110.0) *
+                                                        _radiansPerDegree),
+                                                children: ring3,
+                                              ),
+                                            ],
+                                          )),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                            onPanEnd: _onPanEnd,
+                          ),
                         ),
                       ],
                     );
@@ -281,71 +318,51 @@ class ContactTestViewState extends State<ContactTestView> {
       ),
     );
   }
-}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Stack(
-//       children: <Widget>[
-//         _tAnimator,
-//         Container(
-//               padding: EdgeInsets.only(top: 20.0),
-//               child: StreamBuilder(
-//                 stream: Firestore.instance.collection('users').snapshots(),
-//                 builder: (context, snapshot) {
-//                   if (!snapshot.hasData) {
-//                     return Center(
-//                       child: CircularProgressIndicator(
-//                         valueColor: AlwaysStoppedAnimation<Color>(themeColor),
-//                       ),
-//                     );
-//                   } else {
-//                     return ListView.builder(
-//                       padding: EdgeInsets.all(10.0),
-//                       itemBuilder: (context, index) =>
-//                           buildItem(context, snapshot.data.documents[index]),
-//                       itemCount: snapshot.data.documents.length,
-//                     );
-//                   }
-//                 },
-//               ),
-//             ),
-//         CustomMultiChildLayout(
-//           delegate: _CircularLayoutDelegate(
-//             itemCount: 8,
-//             radius: 135.0,
-//             sAngle: -(random.nextDouble()*20.0+110.0) * _radiansPerDegree
-//           ),
-//           children: products,
-//         ),
-//         CustomMultiChildLayout(
-//           delegate: _CircularLayoutDelegate(
-//             itemCount: 8,
-//             radius: 275.0,
-//             sAngle: -(random.nextDouble()*20.0+110.0) * _radiansPerDegree
-//           ),
-//           children: products,
-//         ),
-//         CustomMultiChildLayout(
-//           delegate: _CircularLayoutDelegate(
-//             itemCount: 8,
-//             radius: 415.0,
-//             sAngle: -(random.nextDouble()*20.0+110.0) * _radiansPerDegree
-//           ),
-//           children: products,
-//         ),
-//         CustomMultiChildLayout(
-//           delegate: _CircularLayoutDelegate(
-//             itemCount: 8,
-//             radius: 555.0,
-//             sAngle: -(random.nextDouble()*20.0+110.0) * _radiansPerDegree
-//           ),
-//           children: products,
-//         ),
-//       ],
-//     );
-//   }
-// }
+  Offset vector;
+  double startingAngle;
+  double deltaAngle = 0.0;
+  double finalAngle = 0.0;
+  // store the final angle of the object
+  double finalObjectAngle = 0.0;
+
+  void _onPanStart(DragStartDetails details) {
+    _polarCoordFromGlobalOffset(details.globalPosition);
+    startingAngle = vector.direction;
+    print('START = $startingAngle ===================================');
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    _polarCoordFromGlobalOffset(details.globalPosition);
+
+    setState(() {
+      // HERE you should use the finalObjectAngle
+      deltaAngle = vector.direction - startingAngle + finalObjectAngle;
+      finalAngle = deltaAngle;
+    });
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    finalAngle = deltaAngle;
+    // Save the finalAngle of the object
+    finalObjectAngle = finalAngle;
+    print('End = $finalAngle ===================================');
+  }
+
+  void _polarCoordFromGlobalOffset(Offset globalOffset) {
+    var localTouchOffset =
+        (context.findRenderObject() as RenderBox).globalToLocal(globalOffset);
+    var localTouchPoint = new Point(localTouchOffset.dx, localTouchOffset.dy);
+    var originPoint =
+        new Point(context.size.width / 2, context.size.height / 2);
+    _polarCoord(originPoint, localTouchPoint);
+  }
+
+  void _polarCoord(Point origin, Point point) {
+    var vectorPoint = point - origin;
+    vector = new Offset(vectorPoint.x, vectorPoint.y);
+  }
+}
 
 class _CircularLayoutDelegate extends MultiChildLayoutDelegate {
   static const String actionButton = 'BUTTON';
