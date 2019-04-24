@@ -37,52 +37,53 @@ class UserManager {
   FirebaseUser currentUser;
   String currentFCMToken;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
+  String lastContactID;
+  String lastContactAvatar;
 
   UserManager() {
-
     signIn = RxCommand.createAsync((LoginInput loginInput) async {
       prefs = await SharedPreferences.getInstance();
-        currentUser = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: loginInput.email, password: loginInput.password)
-            .catchError((onError) {
-          print("onError: "+onError.toString());
-        });
-        print("currentUser"+currentUser.toString());
-        if (currentUser != null) {
-          final QuerySnapshot result = await Firestore.instance
+      currentUser = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: loginInput.email, password: loginInput.password)
+          .catchError((onError) {
+        print("onError: " + onError.toString());
+      });
+      print("currentUser" + currentUser.toString());
+      if (currentUser != null) {
+        final QuerySnapshot result = await Firestore.instance
+            .collection('users')
+            .where('id', isEqualTo: currentUser.uid)
+            .getDocuments();
+        final List<DocumentSnapshot> documents = result.documents;
+        if (documents.length == 0) {
+          await prefs.setString('id', currentUser.uid);
+          await prefs.setString('nickname', currentUser.displayName);
+          await prefs.setString('photoUrl', currentUser.photoUrl);
+        } else {
+          Firestore.instance
               .collection('users')
-              .where('id', isEqualTo: currentUser.uid)
-              .getDocuments();
-          final List<DocumentSnapshot> documents = result.documents;
-          if (documents.length == 0) {
-            await prefs.setString('id', currentUser.uid);
-            await prefs.setString('nickname', currentUser.displayName);
-            await prefs.setString('photoUrl', currentUser.photoUrl);
-          } else {
-            Firestore.instance
-                .collection('users')
-                .document(currentUser.uid)
-                .updateData({'fcm_token': currentFCMToken});
+              .document(currentUser.uid)
+              .updateData({'fcm_token': currentFCMToken});
 
-            await prefs.setString('id', documents[0]['id']);
-            await prefs.setString('nickname', documents[0]['nickname']);
-            await prefs.setString('photoUrl', documents[0]['photo_url']);
-            await prefs.setString('aboutMe', documents[0]['about_me']);
-          }
-          Fluttertoast.showToast(msg: "Sign in success");
-          Navigator.push(
-            loginInput.context,
-            FadeNavRoute(
-                builder: (context) => MainPage()),
-          );
-        }else Fluttertoast.showToast(msg: "Sign in fail");
-
+          await prefs.setString('id', documents[0]['id']);
+          await prefs.setString('nickname', documents[0]['nickname']);
+          await prefs.setString('photoUrl', documents[0]['photo_url']);
+          await prefs.setString('aboutMe', documents[0]['about_me']);
+        }
+        Fluttertoast.showToast(msg: "Sign in success");
+        Navigator.push(
+          loginInput.context,
+          FadeNavRoute(builder: (context) => MainPage()),
+        );
+      } else
+        Fluttertoast.showToast(msg: "Sign in fail");
+      lastContactID = prefs.getString('lastContactID');
+      lastContactAvatar = prefs.getString('lastContactAvatar');
       return true;
     });
-    signIn.isExecuting.listen((onData){
-      print("signIn Exec "+onData.toString());
+    signIn.isExecuting.listen((onData) {
+      print("signIn Exec " + onData.toString());
     });
 
     isSignedIn = RxCommand.createAsync((BuildContext context) async {
@@ -93,7 +94,7 @@ class UserManager {
       if (isLoggedIn) {
         Navigator.push(
           context,
-          FadeNavRoute( builder: (context) => MainPage()),
+          FadeNavRoute(builder: (context) => MainPage()),
         );
       }
     });
@@ -104,15 +105,25 @@ class UserManager {
         email: registerInput.email,
         password: registerInput.password,
       );
-      Firestore.instance.collection('users').document(firebaseUser.uid).setData(
-          {'nickname': registerInput.nickname, 'photo_url': 'https://firebasestorage.googleapis.com/v0/b/gloopy-aebbc.appspot.com/o/ic_launcher.png.png?alt=media&token=a1dfcc89-948d-452f-b849-d2cf5a38a396', 'id': firebaseUser.uid});
+      Firestore.instance
+          .collection('users')
+          .document(firebaseUser.uid)
+          .setData({
+        'nickname': registerInput.nickname,
+        'photo_url':
+            'https://firebasestorage.googleapis.com/v0/b/gloopy-aebbc.appspot.com/o/ic_launcher.png.png?alt=media&token=a1dfcc89-948d-452f-b849-d2cf5a38a396',
+        'id': firebaseUser.uid
+      });
       prefs = await SharedPreferences.getInstance();
       await prefs.setString('id', firebaseUser.uid);
       await prefs.setString('nickname', registerInput.nickname);
       return true;
     });
 
-    getContacts = RxCommand.createSync((_)=> Firestore.instance.collection('users').where("contacts_id", arrayContains: currentUser.uid).snapshots());
+    getContacts = RxCommand.createSync((_) => Firestore.instance
+        .collection('users')
+        .where("contacts_id", arrayContains: currentUser.uid)
+        .snapshots());
     getContacts();
   }
 
@@ -130,7 +141,7 @@ class UserManager {
       },
     );
     _firebaseMessaging.getToken().then((fcmToken) {
-      print("fcmToken = "+fcmToken);
+      print("fcmToken = " + fcmToken);
       currentFCMToken = fcmToken;
     });
   }
@@ -143,6 +154,4 @@ class UserManager {
       print("Settings registered: $settings");
     });
   }
-
-
 }

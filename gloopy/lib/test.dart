@@ -5,12 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gloopy/const.dart';
 import 'package:gloopy/managers/user_manager.dart';
+import 'package:gloopy/numbers_list.dart';
+import 'package:gloopy/radial_list.dart';
 import 'package:gloopy/service_locator.dart';
 import 'package:gloopy/services/dialog_helper.dart';
 import 'package:gloopy/utils/fade_nav_route.dart';
 import 'package:gloopy/views/chat_view.dart';
 import 'package:gloopy/widgets/animator.dart';
 import 'package:gloopy/widgets/planet_widget.dart';
+import 'package:circle_wheel_scroll/circle_wheel_scroll_view.dart';
+import 'package:gloopy/widgets/radial_position.dart';
 
 class ContactTestView extends StatefulWidget {
   @override
@@ -19,11 +23,8 @@ class ContactTestView extends StatefulWidget {
 
 class ContactTestViewState extends State<ContactTestView> {
   Color caughtColor = Colors.grey;
-  List<Widget> products;
   TAnimator _tAnimator;
-
   static double _radiansPerDegree = pi / 180;
-  final double _startAngle = -90.0 * _radiansPerDegree;
   Random random;
   Size size;
   final List<String> planetImages = [
@@ -34,89 +35,116 @@ class ContactTestViewState extends State<ContactTestView> {
   ];
   final List<int> idRings = [0, 1, 2, 3];
   int noRing = -1;
-  List<Widget> planets;
-  List<Widget> ring0;
-  List<Widget> ring1;
-  List<Widget> ring2;
-  List<Widget> ring3;
-  List<String> idList;
+  List<Planet> ring0, ring1, ring2, ring3;
   bool isLoading = false;
+  Offset position = Offset(0.0, 1.0);
+  bool isDragging = false;
+  double rotationValue = 0.0;
+  DragUpdateDetails lastDragCoord;
 
   @override
   void initState() {
     super.initState();
-    products = List<Widget>();
-    planets = List<Widget>();
-    ring0 = List<Widget>();
-    ring1 = List<Widget>();
-    ring2 = List<Widget>();
-    ring3 = List<Widget>();
-    idList = List<String>();
-
+    ring0 = List<Planet>();
+    ring1 = List<Planet>();
+    ring2 = List<Planet>();
+    ring3 = List<Planet>();
     random = Random();
-    for (int i = 0; i < 2; i++) {
-      products.add(LayoutId(
-        id: 'BUTTON$i',
-        //child: Icon(Icons.cloud_circle, size: 75.0,),
-        child: Image.asset(
-          planetImages[random.nextInt(4)],
-          width: 100,
-          fit: BoxFit.fitWidth,
-        ),
-      ));
-    }
     _tAnimator = TAnimator(
       animated: false,
     );
   }
 
-  List<Widget> buildRings(
-      BuildContext context, List<DocumentSnapshot> documents) {
-    planets = documents.map((doc) {
-      noRing++;
-      print(noRing);
-      Planet p = Planet(
-        document: doc,
-        backgroundImg: planetImages[random.nextInt(4)],
-      );
-      switch (noRing % 4) {
-        case 0:
-          ring0.add(LayoutId(
-            id: 'BUTTON$noRing',
-            child: p,
-          ));
-          print("Nickname : ${doc['nickname']}");
-          break;
-        case 1:
-          ring1.add(LayoutId(
-            id: 'BUTTON$noRing',
-            child: p,
-          ));
-          print("Nickname : ${doc['nickname']}");
+  _onHDragStart(coord) {
+    print('The user has started dragging horizontally at: $coord');
+    setState(() {
+      isDragging = true;
+      lastDragCoord = coord;
+    });
+  }
 
-          break;
-        case 2:
-          ring2.add(LayoutId(
-            id: 'BUTTON$noRing',
-            child: p,
-          ));
-          print("Nickname : ${doc['nickname']}");
+  _onHDragUpdate(coord) {
+    print('The user has dragged horizontally to: $coord');
+    setState(() {
+      lastDragCoord = coord;
+      rotationValue =
+          ((rotationValue + (lastDragCoord.primaryDelta) * 0.01) % 360);
+      print("rotationValue $rotationValue");
+    });
+  }
 
-          break;
-        case 3:
-          ring3.add(LayoutId(
-            id: 'BUTTON$noRing',
-            child: p,
-          ));
-          print("Nickname : ${doc['nickname']}");
+  _onHDragEnd(coord) {
+    print('The user has stopped dragging horizontally. $coord');
+    setState(() => isDragging = false);
+  }
 
-          break;
-        default:
-      }
-      return p;
-    }).toList();
+  _dragStatus() {
+    if (isDragging) {
+      return '$lastDragCoord';
+    } else {
+      return '';
+    }
+  }
 
-    return planets;
+  void buildRings(BuildContext context, List<DocumentSnapshot> documents) {
+    if (ring3.length <= 8) {
+      LayoutId currentLID;
+      documents.forEach((doc) {
+        noRing++;
+        print(noRing);
+        Planet p = Planet(
+          document: doc,
+          backgroundImg: planetImages[noRing%4],
+        );
+        switch (noRing % 4) {
+          case 0:
+            currentLID = LayoutId(
+              id: 'BUTTON$noRing',
+              child: p,
+            );
+            //if (!ring0.contains(currentLID)) ring0.add(currentLID);
+            if (ring0
+                .every((pT) => pT.document.documentID != p.document.documentID))
+              ring0.add(p);
+            print("Nickname : ${doc['nickname']}");
+            break;
+          case 1:
+            currentLID = LayoutId(
+              id: 'BUTTON$noRing',
+              child: p,
+            );
+            //if (!ring1.contains(currentLID)) ring1.add(currentLID);
+            if (ring1
+                .every((pT) => pT.document.documentID != p.document.documentID))
+              ring1.add(p);
+            print("Nickname : ${doc['nickname']}");
+            break;
+          case 2:
+            currentLID = LayoutId(
+              id: 'BUTTON$noRing',
+              child: p,
+            );
+            //if (!ring2.contains(currentLID)) ring2.add(currentLID);
+            if (ring2
+                .every((pT) => pT.document.documentID != p.document.documentID))
+              ring2.add(p);
+            print("Nickname : ${doc['nickname']}");
+            break;
+          case 3:
+            currentLID = LayoutId(
+              id: 'BUTTON$noRing',
+              child: p,
+            );
+            //if (!ring3.contains(currentLID)) ring3.add(currentLID);
+            if (ring3
+                .every((pT) => pT.document.documentID != p.document.documentID))
+              ring3.add(p);
+            print("Nickname : ${doc['nickname']}");
+            break;
+          default:
+        }
+      });
+    }
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
@@ -195,172 +223,147 @@ class ContactTestViewState extends State<ContactTestView> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       body: WillPopScope(
-        child: Stack(
-          children: <Widget>[
-            // List
-            Container(
-              padding: EdgeInsets.only(top: 20.0),
-              child: StreamBuilder(
-                stream: Firestore.instance.collection('users').snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(themeColor),
-                      ),
-                    );
-                  } else {
-                    print(buildRings(
-                      context,
-                      snapshot.data.documents,
-                    ));
-                    // return Container(
-                    //     child: ListView(
-                    //   children: planets,
-                    // ));
-                    print(
-                        "0 : ${ring0.length}, 1 : ${ring1.length}, 2 : ${ring2.length}, 3 : ${ring3.length},");
-                    return Stack(
-                                          children: <Widget>[
-                        Positioned(
-                          top: 0,
-                          child: GestureDetector(
-                            onPanStart: _onPanStart,
-                            onPanUpdate: _onPanUpdate,
-                            child: Container(
-                                color: Colors.white,
+        child: GestureDetector(
+          onHorizontalDragStart: _onHDragStart,
+          onHorizontalDragUpdate: _onHDragUpdate,
+          onHorizontalDragEnd: _onHDragEnd,
+          child: Stack(
+            children: <Widget>[
+              _tAnimator,
+              // List
+              Container(
+                child: Transform.rotate(
+                  angle: rotationValue,
+                  origin: Offset(
+                    0,
+                    size.height/2,
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: StreamBuilder(
+                      stream:
+                          Firestore.instance.collection('users').snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(themeColor),
+                            ),
+                          );
+                        } else {
+                          buildRings(
+                            context,
+                            snapshot.data.documents,
+                          );
+                          print(
+                              "0 : ${ring0.length}, 1 : ${ring1.length}, 2 : ${ring2.length}, 3 : ${ring3.length},");
+                          return Stack(
+                            children: <Widget>[
+                              Positioned(
+                                left: size.width / 2.4,
+                                top: size.height /2.1,
+                                child: RadialList(
+                                  radialList: ring0,
+                                  radius: 10.00,
+                                ),
+                              ),
+                              Positioned(
+                                left: size.width / 2.4,
+                                top: size.height / 2.2,
                                 child: Transform.rotate(
-                                  angle: finalAngle,
-                                  child: Center(
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.height*2,
-                                      height: MediaQuery.of(context).size.height*2,
-                                      color: Colors.transparent,
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Positioned.fill(
-                                              child: Stack(
-                                            children: <Widget>[
-                                              CustomMultiChildLayout(
-                                                delegate: _CircularLayoutDelegate(
-                                                    itemCount: 8,
-                                                    radius: 135.0,
-                                                    sAngle: -(random.nextDouble() *
-                                                                20.0 +
-                                                            110.0) *
-                                                        _radiansPerDegree),
-                                                children: ring0,
-                                              ),
-                                              CustomMultiChildLayout(
-                                                delegate: _CircularLayoutDelegate(
-                                                    itemCount: 8,
-                                                    radius: 275.0,
-                                                    sAngle: -(random.nextDouble() *
-                                                                20.0 +
-                                                            110.0) *
-                                                        _radiansPerDegree),
-                                                children: ring1,
-                                              ),
-                                              CustomMultiChildLayout(
-                                                delegate: _CircularLayoutDelegate(
-                                                    itemCount: 8,
-                                                    radius: 415.0,
-                                                    sAngle: -(random.nextDouble() *
-                                                                20.0 +
-                                                            110.0) *
-                                                        _radiansPerDegree),
-                                                children: ring2,
-                                              ),
-                                              CustomMultiChildLayout(
-                                                delegate: _CircularLayoutDelegate(
-                                                    itemCount: 8,
-                                                    radius: 555.0,
-                                                    sAngle: -(random.nextDouble() *
-                                                                20.0 +
-                                                            110.0) *
-                                                        _radiansPerDegree),
-                                                children: ring3,
-                                              ),
-                                            ],
-                                          )),
-                                        ],
-                                      ),
-                                    ),
+                                  angle: 0.2,
+                                                                  child: RadialList(
+                                    radialList: ring1,
+                                    radius: 150.00,
                                   ),
-                                )),
-                            onPanEnd: _onPanEnd,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                },
+                                ),
+                              ),
+                              Positioned(
+                                left: size.width / 2.4,
+                                top: size.height / 2.2,
+                                child: RadialList(
+                                  radialList: ring2,
+                                  radius: 250.00,
+                                ),
+                              ),
+                            ],
+
+                            // Container(
+                            //   child: CircleListScrollView(
+                            //     physics: ScrollPhysics(),
+                            //     clipToSize: false,
+                            //     axis: Axis.horizontal,
+                            //     children: _radialListItems(),
+                            //     itemExtent: 80,
+                            //     radius: MediaQuery.of(context).size.width*0.3,
+                            //   ),
+                            // ),
+                            // CustomMultiChildLayout(
+                            //   delegate: _CircularLayoutDelegate(
+                            //       itemCount: 8,
+                            //       radius: 135.0,
+                            //       sAngle:
+                            //           -(random.nextDouble() * 20.0 + 110.0) *
+                            //               _radiansPerDegree),
+                            //   children: ring0,
+                            // ),
+                            // CustomMultiChildLayout(
+                            //   delegate: _CircularLayoutDelegate(
+                            //       itemCount: 8,
+                            //       radius: 275.0,
+                            //       sAngle:
+                            //           -(random.nextDouble() * 20.0 + 110.0) *
+                            //               _radiansPerDegree),
+                            //   children: ring1,
+                            // ),
+                            // CustomMultiChildLayout(
+                            //   delegate: _CircularLayoutDelegate(
+                            //       itemCount: 8,
+                            //       radius: 415.0,
+                            //       sAngle:
+                            //           -(random.nextDouble() * 20.0 + 110.0) *
+                            //               _radiansPerDegree),
+                            //   children: ring2,
+                            // ),
+                            // CustomMultiChildLayout(
+                            //   delegate: _CircularLayoutDelegate(
+                            //       itemCount: 8,
+                            //       radius: 555.0,
+                            //       sAngle:
+                            //           -(random.nextDouble() * 20.0 + 110.0) *
+                            //               _radiansPerDegree),
+                            //   children: ring3,
+                            // ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ),
-            ),
-            // Loading
-            Positioned(
-              child: isLoading
-                  ? Container(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(themeColor)),
-                      ),
-                      color: Colors.white.withOpacity(0.8),
-                    )
-                  : Container(),
-            )
-          ],
+              // Loading
+              Positioned(
+                child: isLoading
+                    ? Container(
+                        child: Center(
+                          child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(themeColor)),
+                        ),
+                        color: Colors.white.withOpacity(0.8),
+                      )
+                    : Container(),
+              )
+            ],
+          ),
         ),
         onWillPop: () => sl.get<DialogHelper>().onBackPress(context),
       ),
     );
-  }
-
-  Offset vector;
-  double startingAngle;
-  double deltaAngle = 0.0;
-  double finalAngle = 0.0;
-  // store the final angle of the object
-  double finalObjectAngle = 0.0;
-
-  void _onPanStart(DragStartDetails details) {
-    _polarCoordFromGlobalOffset(details.globalPosition);
-    startingAngle = vector.direction;
-    print('START = $startingAngle ===================================');
-  }
-
-  void _onPanUpdate(DragUpdateDetails details) {
-    _polarCoordFromGlobalOffset(details.globalPosition);
-
-    setState(() {
-      // HERE you should use the finalObjectAngle
-      deltaAngle = vector.direction - startingAngle + finalObjectAngle;
-      finalAngle = deltaAngle;
-    });
-  }
-
-  void _onPanEnd(DragEndDetails details) {
-    finalAngle = deltaAngle;
-    // Save the finalAngle of the object
-    finalObjectAngle = finalAngle;
-    print('End = $finalAngle ===================================');
-  }
-
-  void _polarCoordFromGlobalOffset(Offset globalOffset) {
-    var localTouchOffset =
-        (context.findRenderObject() as RenderBox).globalToLocal(globalOffset);
-    var localTouchPoint = new Point(localTouchOffset.dx, localTouchOffset.dy);
-    var originPoint =
-        new Point(context.size.width / 2, context.size.height / 2);
-    _polarCoord(originPoint, localTouchPoint);
-  }
-
-  void _polarCoord(Point origin, Point point) {
-    var vectorPoint = point - origin;
-    vector = new Offset(vectorPoint.x, vectorPoint.y);
   }
 }
 

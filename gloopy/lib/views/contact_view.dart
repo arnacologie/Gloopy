@@ -122,7 +122,6 @@ class ContactViewState extends State<ContactView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: WillPopScope(
         child: Stack(
           children: <Widget>[

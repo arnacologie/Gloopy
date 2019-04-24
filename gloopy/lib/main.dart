@@ -2,10 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:gloopy/const.dart';
 import 'package:gloopy/service_locator.dart';
-import 'package:gloopy/views/another_circle.dart';
 import 'package:gloopy/views/launch_view.dart';
 import 'package:gloopy/views/playground_view.dart';
-import 'package:gloopy/views/pre_login_view.dart';
+import 'package:gloopy/views/trophies.dart';
 
 void main() {
   setUpServiceLocator();
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
       //   title: "Connexion",
       // ),
       //
-      home: Test(),
+      home: LaunchView(),
       //ome: AnotherCircle(),
       debugShowCheckedModeBanner: false,
     );

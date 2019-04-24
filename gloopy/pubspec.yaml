@@ -28,6 +28,7 @@ dependencies:
   firebase_messaging: any
   cached_network_image: ^0.7.0
   matrix_gesture_detector: any
+  transparent_image: any
   rxdart: any
   rx_command: ^4.3.0
   rx_widgets : any
@@ -65,6 +66,7 @@ flutter:
      - images/profile/
      - images/backgrounds/
      - images/characters/ponys/
+     - images/badges/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
